@@ -31,7 +31,10 @@ const userSchema = new mongoose.Schema({
         type: String, // URL for the profile picture
         default: ''
     },
-    posts: []
+    posts: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Post"
+    }]
 });
 
 userSchema.plugin(plm);

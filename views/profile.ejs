@@ -41,9 +41,9 @@
             <img src="images/default_profile_pic.jpg" alt="Profile" class="profile-avatar">
             <h1><%= user.fullname %></h1>
             <p class="profile-username">@<%= user.username %></p>
-            <p class="profile-stats">
+            <!-- <p class="profile-stats">
                 <span>128 followers</span> · <span>96 following</span>
-            </p>
+            </p> -->
             <button class="edit-profile-btn">Edit Profile</button>
             <button class="share-profile-btn">Share</button>
         </section>
@@ -54,24 +54,12 @@
         </section>
 
         <section class="pin-container">
-            <div class="pin">
-                <img src="https://picsum.photos/200/300" alt="Pin">
-            </div>
-            <div class="pin">
-                <img src="https://picsum.photos/200/400" alt="Pin">
-            </div>
-            <div class="pin">
-                <img src="https://picsum.photos/200/250" alt="Pin">
-            </div>
-            <div class="pin">
-                <img src="https://picsum.photos/200/350" alt="Pin">
-            </div>
-            <div class="pin">
-                <img src="https://picsum.photos/200/450" alt="Pin">
-            </div>
-            <div class="pin">
-                <img src="https://picsum.photos/200/280" alt="Pin">
-            </div>
+            <% user.posts.forEach(function(post){ %>
+                <div class="pin">
+                    <img src="./images/uploads/<%= post.image %>" alt="Pin">
+                    <h5 style="margin-left: 12px;"><%= post.imageText %></h5>
+                </div>
+            <% }) %>
         </section>
     </main>
 
