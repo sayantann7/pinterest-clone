@@ -6,6 +6,9 @@ This project aims to be a fully functional clone of Pinterest, designed to repli
 
 - **User Authentication**: Users can sign up, log in, and manage their profiles.
 - **Image Upload & Sharing**: Users can upload images, which are displayed in a Pinterest-style grid.
+- **Saved Posts**: Users can save posts (images) to their own profiles.
+- **Like Posts**: Users can like posts to show appreciation for the content.
+- **Profile Pages**: Users can view their own and others' profile pages, including their saved posts.
 
 ## Technologies Used
 

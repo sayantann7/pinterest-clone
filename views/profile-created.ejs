@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile - Pinterest</title>
+    <link rel="stylesheet" href="/stylesheets/feed.css" />
+    <link rel="stylesheet" href="/stylesheets/profile.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <header>
+      <nav>
+        <div class="logo">
+          <a href="/feed" style="text-decoration: none; color: inherit"
+            >Pinterest</a
+          >
+        </div>
+        <div class="search">
+          <input type="text" placeholder="Search..." />
+        </div>
+        <div class="profile">
+          <button class="profile-button" onclick="toggleDropdown(event)">
+            <% if (user.dp) { %>
+            <img
+              src="./images/uploads/<%= user.dp %>"
+              alt="Profile"
+              class="dropdown-profile-img"
+            />
+            <% } else { %>
+            <img
+              src="./images/default_profile_pic.jpg"
+              alt="Profile"
+              class="dropdown-profile-img"
+            />
+            <% } %>
+          </button>
+          <div class="profile-dropdown" id="profileDropdown">
+            <div class="dropdown-header">
+              <% if (user.dp) { %>
+              <img
+                src="./images/uploads/<%= user.dp %>"
+                alt="Profile"
+                class="dropdown-profile-img"
+              />
+              <% } else { %>
+              <img
+                src="./images/default_profile_pic.jpg"
+                alt="Profile"
+                class="dropdown-profile-img"
+              />
+              <% } %>
+              <div class="dropdown-profile-info">
+                <span class="profile-name"><%= user.fullname %></span>
+                <span class="profile-email">@<%= user.username %></span>
+              </div>
+            </div>
+            <div class="dropdown-divider"></div>
+            <a href="/profile-created" class="dropdown-item">Visit Profile</a>
+            <div class="dropdown-divider"></div>
+            <a href="/logout" class="dropdown-item logout">Log out</a>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="profile-main">
+      <section class="profile-header">
+        <% if (user.dp) { %>
+        <img
+          src="./images/uploads/<%= user.dp %>"
+          alt="Profile"
+          class="profile-avatar"
+        />
+        <% } else { %>
+        <img
+          src="./images/default_profile_pic.jpg"
+          alt="Profile"
+          class="profile-avatar"
+        />
+        <% } %>
+        <h1><%= user.fullname %></h1>
+        <p class="profile-username">@<%= user.username %></p>
+        <!-- <p class="profile-stats">
+                <span>128 followers</span> · <span>96 following</span>
+            </p> -->
+        <button
+          class="edit-profile-btn share-profile-btn"
+          onclick="toggleProfilePicModal()"
+          id="profilePicUploadButton"
+        >
+          Edit Profile Picture
+        </button>
+        <button onclick="toggleUploadModal()" class="share-profile-btn">
+          Share
+        </button>
+      </section>
+
+      <section class="profile-tabs">
+        <a
+          href="/profile-created"
+          style="text-decoration: none; color: inherit"
+        >
+          <button class="tab active">Created</button>
+        </a>
+        <a href="/profile-saved" style="text-decoration: none; color: inherit">
+          <button class="tab">Saved</button>
+        </a>
+      </section>
+
+      <% if (user.posts.length == 0) { %>
+      <h3>Nothing to show here...</h3>
+      <% } else { %>
+      <section class="pin-container">
+        <% user.posts.forEach(function(post){ %>
+        <a
+          href="/post-page/<%=post._id%>"
+          style="text-decoration: none; color: black"
+        >
+          <div class="pin">
+            <img src="./images/uploads/<%= post.image %>" alt="Pin" />
+            <h5 style="margin-left: 12px"><%= post.imageText %></h5>
+          </div>
+        </a>
+        <% })} %>
+      </section>
+    </main>
+
+    <div class="upload-modal" id="profilePicModal">
+      <div class="upload-content">
+        <button class="close-modal" onclick="toggleProfilePicModal()">
+          <i class="fas fa-times"></i>
+        </button>
+        <form
+          method="post"
+          action="/upload-profile-pic"
+          enctype="multipart/form-data"
+        >
+          <input type="file" name="profilePic" />
+          <input type="submit" value="Upload Profile Picture" />
+        </form>
+      </div>
+    </div>
+
+    <!-- Upload Modal -->
+    <div class="upload-modal" id="uploadModal">
+      <div class="upload-content">
+        <button class="close-modal" onclick="toggleUploadModal()">
+          <i class="fas fa-times"></i>
+        </button>
+        <form action="/upload" method="post" enctype="multipart/form-data">
+          <input name="file" accept="image/*" type="file" src="" alt="" />
+          <input name="filecaption" type="text" placeholder="Enter a caption" />
+          <input type="submit" value="Upload" />
+        </form>
+      </div>
+    </div>
+
+    <script>
+      function toggleDropdown(event) {
+        event.stopPropagation();
+        const dropdown = document.getElementById("profileDropdown");
+        dropdown.classList.toggle("show");
+      }
+
+      document.addEventListener("click", function (event) {
+        const dropdown = document.getElementById("profileDropdown");
+        if (!event.target.closest(".profile")) {
+          dropdown.classList.remove("show");
+        }
+      });
+
+      // Tab switching functionality
+      const tabs = document.querySelectorAll(".tab");
+      tabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          tabs.forEach((t) => t.classList.remove("active"));
+          tab.classList.add("active");
+        });
+      });
+
+      function resetProfilePicForm() {
+        document.getElementById("profilePicInput").value = "";
+        document.getElementById("profilePicUploadButton").disabled = true;
+        document.getElementById("profilePicPreview").classList.remove("show");
+        document.getElementById("profilePicPlaceholder").style.display = "flex";
+        document.getElementById("profilePicPreview").src = "";
+      }
+
+      function toggleProfilePicModal() {
+        const modal = document.getElementById("profilePicModal");
+        modal.classList.toggle("show");
+
+        if (!modal.classList.contains("show")) {
+          resetProfilePicForm();
+        }
+      }
+
+      function toggleUploadModal() {
+        const modal = document.getElementById("uploadModal");
+        modal.classList.toggle("show");
+
+        // Reset the form when closing
+        if (!modal.classList.contains("show")) {
+          resetUploadForm();
+        }
+      }
+
+      function resetUploadForm() {
+        document.getElementById("fileInput").value = "";
+        document.getElementById("captionInput").value = "";
+        document.getElementById("uploadButton").disabled = true;
+        document.getElementById("imagePreview").classList.remove("show");
+        document.getElementById("uploadPlaceholder").style.display = "flex";
+        document.getElementById("imagePreview").src = "";
+      }
+    </script>
+  </body>
+</html>
