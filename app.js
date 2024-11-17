@@ -1,3 +1,4 @@
+require("dotenv").config();
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -6,6 +7,8 @@ var logger = require('morgan');
 const expressSession = require('express-session');
 const passport = require('passport');
 const flash = require('connect-flash');
+const userModel = require('./routes/users');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -51,6 +54,45 @@ app.use(function(err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render('error');
+});
+
+
+passport.use(new GoogleStrategy({
+  clientID: process.env.GOOGLE_CLIENT_ID,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  callbackURL: 'http://localhost:3000/auth/google/callback',
+},
+async (accessToken, refreshToken, profile, done) => {
+  try {
+    let user = await userModel.findOne({ email: profile.emails[0].value });
+    if (!user) {
+      // Create a new user
+      user = new userModel({
+        username: profile.displayName,
+        email: profile.emails[0].value,
+        fullname: profile.displayName,
+      });
+      await user.save();
+    }
+    return done(null, user);
+  } catch (error) {
+    return done(error);
+  }
+}
+));
+
+
+passport.serializeUser((user, done) => {
+  done(null, user.id);
+});
+
+passport.deserializeUser(async (id, done) => {
+  try {
+    const user = await userModel.findById(id);
+    done(null, user);
+  } catch (error) {
+    done(error);
+  }
 });
 
 module.exports = app;

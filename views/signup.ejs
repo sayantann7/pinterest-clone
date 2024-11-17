@@ -1,51 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sign Up - Pinterest</title>
-    <link rel="stylesheet" href="stylesheets/feed.css">
-    <link rel="stylesheet" href="stylesheets/signup.css">
-</head>
-<body>
-  <header>
+    <link rel="stylesheet" href="stylesheets/feed.css" />
+    <link rel="stylesheet" href="stylesheets/signup.css" />
+  </head>
+  <body>
+    <header>
       <nav>
-        <div class="logo"><a href="/feed" style="text-decoration: none; color: inherit">Pinterest</a></div>
+        <div class="logo">
+          <a href="/feed" style="text-decoration: none; color: inherit"
+            >Pinterest</a
+          >
+        </div>
       </nav>
-  </header>
+    </header>
 
-  <main class="auth-container">
+    <main class="auth-container">
       <div class="auth-box">
-          <div class="auth-header">
-              <img src="https://api.iconify.design/logos:pinterest.svg" alt="Pinterest" class="auth-logo">
-              <h1>Sign up to see more</h1>
-              <p>Find new ideas to try</p>
-          </div>
+        <div class="auth-header">
+          <img
+            src="https://api.iconify.design/logos:pinterest.svg"
+            alt="Pinterest"
+            class="auth-logo"
+          />
+          <h1>Sign up to see more</h1>
+          <p>Find new ideas to try</p>
+        </div>
 
-          <form action="/register" method="post" class="auth-form">
-              <div class="form-group">
-                  <input name="fullname" type="text" id="fullname" placeholder="Full Name" required>
-              </div>
-              <div class="form-group">
-                  <input name="username" type="text" id="username" placeholder="Username" required>
-              </div>
-              <div class="form-group">
-                  <input name="email" type="email" id="email" placeholder="Email" required>
-              </div>
-              <div class="form-group">
-                  <input name="password" type="password" id="password" placeholder="Create a password" required>
-              </div>
-              <button type="submit" class="auth-button">Continue</button>
-              <div class="divider">OR</div>
-              <button type="button" class="social-button google">
-                  Continue with Google
-              </button>
-          </form>
-
-          <div class="auth-footer">
-              <p>Already a member? <a href="/login">Log in</a></p>
+        <form action="/register" method="post" class="auth-form">
+          <div class="form-group">
+            <input
+              name="fullname"
+              type="text"
+              id="fullname"
+              placeholder="Full Name"
+              required
+            />
           </div>
+          <div class="form-group">
+            <input
+              name="username"
+              type="text"
+              id="username"
+              placeholder="Username"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <input
+              name="email"
+              type="email"
+              id="email"
+              placeholder="Email"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <input
+              name="password"
+              type="password"
+              id="password"
+              placeholder="Create a password"
+              required
+            />
+          </div>
+          <button type="submit" class="auth-button">Continue</button>
+          <div class="divider">OR</div>
+          <a style="text-decoration: none; color: inherit" href="/auth/google">
+            <button type="button" class="social-button google">
+              Continue with Google
+            </button>
+          </a>
+        </form>
+
+        <div class="auth-footer">
+          <p>Already a member? <a href="/login">Log in</a></p>
+        </div>
       </div>
-  </main>
-</body>
+    </main>
+  </body>
 </html>

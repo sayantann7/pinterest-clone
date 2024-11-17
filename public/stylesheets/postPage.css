@@ -1,100 +1,120 @@
 /* styles.css */
 body {
-	font-family: Arial, sans-serif;
-	background-color: #f5f5f5;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	height: 100vh;
-	margin: 0;
-  }
-  
-  .post-card {
-	width: 350px;
-	background-color: #fff;
-	border-radius: 8px;
-	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-	overflow: hidden;
-  }
-  
-  .profile-section {
-	display: flex;
-	align-items: center;
-	padding: 10px 15px;
-  }
-  
-  .profile-pic {
-	width: 40px;
-	height: 40px;
-	border-radius: 50%;
-	margin-right: 10px;
-  }
-  
-  .username {
-	font-weight: bold;
-	color: #333;
-  }
-  
-  .post-content {
-	padding: 15px;
-  }
-  
-  .post-image {
-	width: 100%;
-	border-radius: 8px;
-  }
-  
-  .caption {
-	margin-top: 10px;
-	font-size: 14px;
-	color: #555;
-  }
-  
-  .action-buttons {
-	display: flex;
-	justify-content: space-around;
-	padding: 10px 0;
-	border-top: 1px solid #eee;
-  }
-  
-  .action-buttons button {
-	padding: 8px 15px;
-	font-size: 14px;
-	border: none;
-	border-radius: 5px;
-	cursor: pointer;
-	transition: background-color 0.3s ease;
-  }
-  
-  .like-btn {
-	background-color: #f0f0f0;
-	color: #333;
-  }
-  
-  .like-btn:hover {
-	background-color: rgb(109, 0, 0);
-  }
-  
-  .comment-btn {
-	background-color: #f0f0f0;
-	color: #333;
-  }
-  
-  .comment-btn:hover {
-	background-color: rgb(109, 0, 0);
-  }
-  
-  .save-btn {
-	background-color: #007bff;
-	color: #fff;
-  }
-  
-  .save-btn:hover {
-	background-color: rgb(109, 0, 0);
-  }
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
 
-  .save-btn, .like-btn, .comment-btn {
-	background-color: red;
-	color: white;
-  }
-  
+.post-card {
+  width: 350px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.profile-section {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+}
+
+.profile-pic {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.username {
+  font-weight: bold;
+  color: #333;
+}
+
+.post-content {
+  padding: 15px;
+}
+
+.post-image {
+  width: 100%;
+  border-radius: 8px;
+}
+
+.caption {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #555;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 0;
+  border-top: 1px solid #eee;
+}
+
+.action-buttons button {
+  padding: 8px 15px;
+  font-size: 14px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.like-btn {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.like-btn:hover {
+  background-color: rgb(109, 0, 0);
+}
+
+.comment-btn {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.comment-btn:hover {
+  background-color: rgb(109, 0, 0);
+}
+
+.save-btn {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.save-btn:hover {
+  background-color: rgb(109, 0, 0);
+}
+
+.save-btn,
+.like-btn,
+.comment-btn {
+  background-color: red;
+  color: white;
+}
+
+.mainContainer {
+  margin-top: 450px;
+  display: flex;
+  flex-direction: column; /* Ensures vertical stacking */
+  align-items: center; /* Aligns items to the center horizontally */
+  gap: 20px; /* Adds space between the post card and comment section */
+  width: 100%; /* Takes full-width of the parent */
+  padding: 20px; /* Optional: Adds some padding around the container */
+}
+.post-card,
+.comments-section {
+  width: 90%;
+  max-width: 600px;
+  max-height: 544px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  background: #fff;
+}

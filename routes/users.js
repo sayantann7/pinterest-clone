@@ -31,6 +31,9 @@ const userSchema = new mongoose.Schema({
         type: String, // URL for the profile picture
         default: ''
     },
+    googleId: {
+        type: String, // Store the Google ID
+    },
     posts: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Post"
@@ -41,6 +44,6 @@ const userSchema = new mongoose.Schema({
     }]
 });
 
-userSchema.plugin(plm);
+userSchema.plugin(plm); // For local authentication
 
 module.exports = mongoose.model('User', userSchema);

@@ -1,71 +1,261 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Social Media Post Card</title>
-  <link rel="stylesheet" href="/stylesheets/postPage.css">
-  <link rel="stylesheet" href="/stylesheets/feed.css">
-</head>
-<body>
-  <header>
-    <nav>
-      <div class="logo"><a href="/feed" style="text-decoration: none; color: inherit">Pinterest</a></div>
-      <div class="search">
-        <input type="text" placeholder="Search..." />
-      </div>
-      <div class="add-post">
-          <button class="add-post-button" onclick="toggleUploadModal()">
-              <i class="fas fa-plus"></i>
-          </button>
-      </div>
-      <div class="profile">
-        <button class="profile-button" onclick="toggleDropdown(event)">
-          <% if (user.dp) { %>
-            <img src="/images/uploads/<%= user.dp %>" alt="Profile" class="profile-img">
-            <% } else { %>
-            <img src="/images/default_profile_pic.jpg" alt="Profile" class="profile-img">
-            <% } %>
-        </button>
-        <div class="profile-dropdown" id="profileDropdown">
-          <div class="dropdown-header">
-            <% if (user.dp) { %>
-            <img src="/images/uploads/<%= user.dp %>" alt="Profile" class="dropdown-profile-img">
-            <% } else { %>
-            <img src="/images/default_profile_pic.jpg" alt="Profile" class="dropdown-profile-img">
-            <% } %>
-            <div class="dropdown-profile-info">
-              <span class="profile-name"><%= user.fullname %></span>
-              <span class="profile-email">@<%= user.username %></span>
-            </div>
-          </div>
-          <div class="dropdown-divider"></div>
-          <a href="/profile-created" class="dropdown-item">Visit Profile</a>
-          <div class="dropdown-divider"></div>
-          <a href="/logout" class="dropdown-item logout">Log out</a>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Post - Pinterest</title>
+    <link rel="stylesheet" href="/stylesheets/postPage.css" />
+    <link rel="stylesheet" href="/stylesheets/feed.css" />
+    <style>
+      /* Comments Section */
+      .comments-section {
+        width: 90%;
+        max-width: 600px;
+        background-color: #ffffff;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        margin: 20px auto;
+        padding: 20px;
+        border-radius: 8px;
+      }
+
+      .comment-card {
+        margin-bottom: 15px;
+        border-bottom: 1px solid #e0e0e0;
+        padding-bottom: 15px;
+      }
+
+      .comment-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+
+      .comment-header .author {
+        font-weight: bold;
+        color: #333333;
+      }
+
+      .comment-header .timestamp {
+        font-size: 12px;
+        color: #888888;
+      }
+
+      .comment-text {
+        font-size: 14px;
+        color: #555555;
+        margin-bottom: 15px;
+      }
+
+      /* Comments Form */
+      .comments-form {
+        margin-top: 20px;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+      }
+
+      .comments-form h3 {
+        margin-bottom: 15px;
+        font-size: 18px;
+        color: #333333;
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+      }
+
+      .form-group label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: #555555;
+      }
+
+      .form-group input,
+      .form-group textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #e0e0e0;
+        border-radius: 5px;
+        font-size: 14px;
+        color: #333333;
+      }
+
+      .form-group input:focus,
+      .form-group textarea:focus {
+        outline: none;
+        border-color: #007bff;
+        box-shadow: 0px 0px 4px rgba(0, 123, 255, 0.2);
+      }
+
+      .submit-btn {
+        display: inline-block;
+        padding: 10px 20px;
+        font-size: 14px;
+        font-weight: bold;
+        color: #ffffff;
+        background-color: red;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      .submit-btn:hover {
+        background-color: rgb(109, 0, 0);
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav>
+        <div class="logo">
+          <a href="/feed" style="text-decoration: none; color: inherit"
+            >Pinterest</a
+          >
         </div>
+        <div class="search">
+          <input type="text" placeholder="Search..." />
+        </div>
+        <div class="add-post">
+          <button class="add-post-button" onclick="toggleUploadModal()">
+            <i class="fas fa-plus"></i>
+          </button>
+        </div>
+        <div class="profile">
+          <button class="profile-button" onclick="toggleDropdown(event)">
+            <% if (user.dp) { %>
+            <img
+              src="/images/uploads/<%= user.dp %>"
+              alt="Profile"
+              class="profile-img"
+            />
+            <% } else { %>
+            <img
+              src="/images/default_profile_pic.jpg"
+              alt="Profile"
+              class="profile-img"
+            />
+            <% } %>
+          </button>
+          <div class="profile-dropdown" id="profileDropdown">
+            <div class="dropdown-header">
+              <% if (user.dp) { %>
+              <img
+                src="/images/uploads/<%= user.dp %>"
+                alt="Profile"
+                class="dropdown-profile-img"
+              />
+              <% } else { %>
+              <img
+                src="/images/default_profile_pic.jpg"
+                alt="Profile"
+                class="dropdown-profile-img"
+              />
+              <% } %>
+              <div class="dropdown-profile-info">
+                <span class="profile-name"><%= user.fullname %></span>
+                <span class="profile-email">@<%= user.username %></span>
+              </div>
+            </div>
+            <div class="dropdown-divider"></div>
+            <a href="/profile-created" class="dropdown-item">Visit Profile</a>
+            <div class="dropdown-divider"></div>
+            <a href="/logout" class="dropdown-item logout">Log out</a>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <div class="mainContainer">
+    <div class="post-card">
+      <div class="profile-section">
+        <% if (post.user.dp) { %><img
+          class="profile-pic"
+          src="/images/uploads/<%=post.user.dp%>"
+          alt="Profile"
+        /><% } else { %><img
+          class="profile-pic"
+          src="/images/default_profile_pic.jpg"
+          alt="Profile"
+        /><% } %>
+        <a
+          style="text-decoration: none"
+          href="/userProfile/<%=  post.user.username%>"
+          ><span class="username">@<%=post.user.username%></span></a
+        >
       </div>
-    </nav>
-  </header>
-  <div class="post-card">
-    <div class="profile-section">
-      <% if (post.user.dp) { %><img class="profile-pic" src="/images/uploads/<%=post.user.dp%>" alt="Profile"><% } else { %><img class="profile-pic" src="/images/default_profile_pic.jpg" alt="Profile"><% } %>
-      <a style="text-decoration: none;" href="/userProfile/<%=  post.user.username%>"><span class="username">@<%=post.user.username%></span></a>
+      <p
+        class="caption"
+        style="margin-left: 12px; margin-top: 0px; margin-bottom: 0px"
+      >
+        <%= timeAgo(post.createdAt) %>
+      </p>
+      <div class="post-content">
+        <img
+          class="post-image"
+          src="/images/uploads/<%=post.image%>"
+          alt="Post"
+        />
+        <p class="caption"><%=post.imageText%></p>
+        <p class="caption"><%=post.likes.length%> Likes</p>
+      </div>
+      <div class="action-buttons">
+        <a href="/likePost/<%=post._id%>" style="text-decoration: none"
+          ><button class="like-btn">Like</button></a
+        >
+        <a href="/savePost/<%=post._id%>" style="text-decoration: none"
+          ><button class="save-btn">Save</button></a
+        >
+      </div>
     </div>
-    <p class="caption" style="margin-left: 12px; margin-top: 0px; margin-bottom: 0px;"><%= timeAgo(post.createdAt) %></p>
-    <div class="post-content">
-      <img class="post-image" src="/images/uploads/<%=post.image%>" alt="Post">
-      <p class="caption"><%=post.imageText%></p>
-      <p class="caption"><%=post.likes.length%> Likes</p>
-    </div>
-    <div class="action-buttons">
-      <a href="/likePost/<%=post._id%>" style="text-decoration: none;"><button class="like-btn">Like</button></a>
-      <a href="/savePost/<%=post._id%>" style="text-decoration: none;"><button class="save-btn">Save</button></a>
+
+
+     <!-- Comments Section -->
+     <div class="comments-section">
+      <h3>Comments</h3>
+
+      <!-- Add New Comment Form -->
+      <div class="comments-form">
+        <h3>Leave a Comment</h3>
+        <form method="post" action="/addComment/<%= post._id %>" id="commentForm">
+          <div class="form-group">
+          </div>
+          <div class="form-group">
+            <input
+            type="text"
+              id="commentText"
+              name="comment"
+              placeholder="Write your comment here..."
+              required
+            ></input>
+          </div>
+          <button type="submit" class="submit-btn">Comment</button>
+        </form>
+      </div>
+
+      <!-- Existing Comments -->
+      <div class="comment-card">
+        <% if (post.comments.length == 0) {%>
+          <span class="author">No comments yet...</span>
+          <% } else { %>
+          <% post.comments.forEach((comment) => { %>
+        <div class="comment-header">
+          <span style="margin-top:12px" class="author"><%= comment.author %></span>
+          <span class="timestamp"><%= timeAgo(comment.createdAt) %></span>
+        </div>
+        <div class="comment-text">
+          <%= comment.commentText %>
+        </div>
+        <% })} %>
+      </div>
     </div>
   </div>
-</body>
-<script>
-  function toggleDropdown(event) {
+    
+  </body>
+  
+  <script>
+    function toggleDropdown(event) {
       event.stopPropagation();
       const dropdown = document.getElementById("profileDropdown");
       dropdown.classList.toggle("show");
@@ -86,5 +276,5 @@
         tab.classList.add("active");
       });
     });
-</script>
+  </script>
 </html>

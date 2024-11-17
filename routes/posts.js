@@ -16,12 +16,16 @@ const postSchema = new mongoose.Schema({
     },
     likes: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
+        ref: 'User'
     }],
     image: {
         type: String,
         required: true
-    }
+    },
+    comments: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Comment'
+    }]
 });
 
 module.exports = mongoose.model('Post', postSchema);

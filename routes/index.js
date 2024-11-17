@@ -5,6 +5,7 @@ const localStrategy = require("passport-local");
 var router = express.Router();
 const upload = require("./multer");
 const postModel = require("./posts");
+const commentModel = require("./comments");
 
 passport.use(new localStrategy(userModel.authenticate()));
 
@@ -12,6 +13,23 @@ passport.use(new localStrategy(userModel.authenticate()));
 router.get("/", function (req, res, next) {
   res.render("signup");
 });
+
+// Route to start Google authentication
+router.get("/auth/google", passport.authenticate("google", {
+  scope: ["profile", "email"]
+}));
+
+// Callback route for Google to redirect to
+router.get("/auth/google/callback", 
+  passport.authenticate("google", { 
+    failureRedirect: "/login", 
+    failureFlash: true 
+  }), 
+  (req, res) => {
+    // Successful authentication, redirect to feed
+    res.redirect("/profile");
+  }
+);
 
 router.get("/login",function(req,res){
   res.render("login",{error:req.flash('error')});
@@ -95,6 +113,23 @@ router.get("/savePost/:postID",isLoggedIn,async function(req,res){
   }
   await user.save();
   res.redirect("/post-page/"+req.params.postID);
+});
+
+router.post("/addComment/:postID",isLoggedIn,async function(req,res){
+  const post = await postModel.findById(req.params.postID);
+  const user = await userModel.findOne({username:req.session.passport.user});
+  const comment = new commentModel({
+    author:user.username,
+    text:req.body.comment,
+    postId:post._id
+  });
+  await comment.save();
+  post.comments.push(comment._id);
+  await post.save();
+  // await comment.populate("postID");
+  await post.populate("comments");
+  // res.redirect("/post-page/"+req.params.postID);
+  res.send(comment);
 });
 
 router.post("/upload-profile-pic",isLoggedIn,upload.single("profilePic"),async function(req,res){
