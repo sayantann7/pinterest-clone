@@ -9,6 +9,8 @@ This project aims to be a fully functional clone of Pinterest, designed to repli
 - **Saved Posts**: Users can save posts (images) to their own profiles.
 - **Like Posts**: Users can like posts to show appreciation for the content.
 - **Profile Pages**: Users can view their own and others' profile pages, including their saved posts.
+- **Google Auth (Not Working Right Now)** - Users can sign up/login with Google account.
+- **Comments (Still need final touches)** - Users can comment on posts.
 
 ## Technologies Used
 
