@@ -72,7 +72,7 @@ router.post("/upload",isLoggedIn,upload.single("file"),async function(req,res){
   });
   user.posts.push(post._id);
   await user.save();
-  res.redirect("/profile");
+  res.redirect("/profile-created");
 });
 
 router.get("/post-page/:postID",isLoggedIn,async function(req,res){
@@ -82,13 +82,20 @@ router.get("/post-page/:postID",isLoggedIn,async function(req,res){
   const post = await postModel.findById(req.params.postID);
   await user.populate("posts");
   await post.populate("user");
+  await post.populate("comments");
   res.render("postPage",{user:user,post:post,timeAgo:timeAgo});
 });
 
-router.get("/userProfile/:username",isLoggedIn,async function(req,res){
+router.get("/userProfile-created/:username",isLoggedIn,async function(req,res){
   const user = await userModel.findOne({username:req.params.username});
   await user.populate("posts");
-  res.render("userProfile",{user});
+  res.render("userProfile-created",{user});
+});
+
+router.get("/userProfile-saved/:username",isLoggedIn,async function(req,res){
+  const user = await userModel.findOne({username:req.params.username});
+  await user.populate("savedPosts");
+  res.render("userProfile-saved",{user});
 });
 
 router.get("/likePost/:postID",isLoggedIn,async function(req,res){
@@ -115,6 +122,45 @@ router.get("/savePost/:postID",isLoggedIn,async function(req,res){
   res.redirect("/post-page/"+req.params.postID);
 });
 
+router.post("/searchResults", isLoggedIn, async function (req, res) {
+  try {
+      const user = await userModel.findOne({ username: req.session.passport.user });
+      await user.populate("posts");
+
+      const searchTerm = req.body.searchQuery;
+
+      // Find users matching the search term
+      const matchingUsers = await userModel.find({
+          $or: [
+              { username: { $regex: searchTerm, $options: "i" } }, // Case-insensitive search in username
+              { fullname: { $regex: searchTerm, $options: "i" } }  // Case-insensitive search in fullname
+          ]
+      });
+
+      // Extract matching user IDs
+      const matchingUserIds = matchingUsers.map(user => user._id);
+
+      // Find posts where imageText matches the term or created by matching users
+      const posts = await postModel
+          .find({
+              $or: [
+                  { imageText: { $regex: searchTerm, $options: "i" } }, // Search in imageText
+                  { user: { $in: matchingUserIds } }                    // Posts by matching users
+              ]
+          })
+          .populate('user') // Populate user details
+          .sort({ createdAt: -1 }); // Sort by newest first
+
+      // Render the feed with search results
+      res.render("feed", { user: user, posts: posts, timeAgo: timeAgo });
+  } catch (error) {
+      console.error(error);
+      res.status(500).send("Something went wrong while searching!");
+  }
+});
+
+
+
 router.post("/addComment/:postID",isLoggedIn,async function(req,res){
   const post = await postModel.findById(req.params.postID);
   const user = await userModel.findOne({username:req.session.passport.user});
@@ -126,10 +172,8 @@ router.post("/addComment/:postID",isLoggedIn,async function(req,res){
   await comment.save();
   post.comments.push(comment._id);
   await post.save();
-  // await comment.populate("postID");
   await post.populate("comments");
-  // res.redirect("/post-page/"+req.params.postID);
-  res.send(comment);
+  res.send(post);
 });
 
 router.post("/upload-profile-pic",isLoggedIn,upload.single("profilePic"),async function(req,res){

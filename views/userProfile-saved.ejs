@@ -20,8 +20,13 @@
           >
         </div>
         <div class="search">
-          <input type="text" placeholder="Search..." />
-        </div>
+            <form action="/searchResults" method="post">
+              <input name="searchQuery" type="text" placeholder="Search..." />
+              <button type="submit" class="search-btn">
+                <i class="fas fa-search"></i>
+              </button>
+            </form>
+          </div>
         <div class="profile">
           <button class="profile-button" onclick="toggleDropdown(event)">
             <% if (user.dp) { %>
@@ -90,22 +95,15 @@
       </section>
 
       <section class="profile-tabs">
-        <button class="tab active">Created</button>
-        <button class="tab">Saved</button>
-      </section>
-
-      <section class="pin-container">
-        <% user.posts.forEach(function(post){ %>
         <a
-          href="/post-page/<%=post._id%>"
-          style="text-decoration: none; color: black"
+          href="/userProfile-created/<%=user.username%>"
+          style="text-decoration: none; color: inherit"
         >
-          <div class="pin">
-            <img src="/images/uploads/<%= post.image %>" alt="Pin" />
-            <h5 style="margin-left: 12px"><%= post.imageText %></h5>
-          </div>
+          <button class="tab">Created</button>
         </a>
-        <% }) %>
+        <a href="/userProfile-saved/<%=user.username%>" style="text-decoration: none; color: inherit">
+          <button class="tab active">Saved</button>
+        </a>
       </section>
     </main>
   </body>

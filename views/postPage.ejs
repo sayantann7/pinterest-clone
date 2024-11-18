@@ -116,7 +116,12 @@
           >
         </div>
         <div class="search">
-          <input type="text" placeholder="Search..." />
+          <form action="/searchResults" method="post">
+            <input name="searchQuery" type="text" placeholder="Search..." />
+            <button type="submit" class="search-btn">
+              <i class="fas fa-search"></i>
+            </button>
+          </form>
         </div>
         <div class="add-post">
           <button class="add-post-button" onclick="toggleUploadModal()">
@@ -179,11 +184,15 @@
           src="/images/default_profile_pic.jpg"
           alt="Profile"
         /><% } %>
-        <a
-          style="text-decoration: none"
-          href="/userProfile/<%=  post.user.username%>"
-          ><span class="username">@<%=post.user.username%></span></a
-        >
+        <% if (post.user.username!=user.username){ %>
+          <a href="/userProfile-created/<%=  post.user.username %>" style="text-decoration: none; color: inherit;">
+            <span class="username">@<%=post.user.username%></span>
+          </a>
+          <% }else{ %>
+          <a href="/profile-created" style="text-decoration: none; color: inherit;">
+            <span class="username">@<%=post.user.username%></span>
+          </a>
+          <% } %>
       </div>
       <p
         class="caption"
@@ -239,16 +248,40 @@
         <% if (post.comments.length == 0) {%>
           <span class="author">No comments yet...</span>
           <% } else { %>
-          <% post.comments.forEach((comment) => { %>
+          <% for(let i = 0; i < post.comments.length; i++){ %>
         <div class="comment-header">
-          <span style="margin-top:12px" class="author"><%= comment.author %></span>
-          <span class="timestamp"><%= timeAgo(comment.createdAt) %></span>
+          <span class="author">
+            <% if (post.comments[i].author!=user.username){ %>
+              <a href="/userProfile-created/<%= post.comments[i].author %>" style="text-decoration: none; color: inherit;">
+              <%= post.comments[i].author %>
+              </a>
+              <% }else{ %>
+              <a href="/profile-created" style="text-decoration: none; color: inherit;">
+                <%= post.comments[i].author %>
+              </a>
+              <% } %>
+        </span>
+          <span class="timestamp"><%= timeAgo(post.comments[i].createdAt) %></span>
         </div>
         <div class="comment-text">
-          <%= comment.commentText %>
+          <%= post.comments[i].text %>
         </div>
-        <% })} %>
+        <% }} %>
       </div>
+    </div>
+  </div>
+
+
+  <div class="upload-modal" id="uploadModal">
+    <div class="upload-content">
+      <button class="close-modal" onclick="toggleLikeModal()">
+        <i class="fas fa-times"></i>
+      </button>
+      <form action="/upload" method="post" enctype="multipart/form-data">
+        <input name="file" accept="image/*" type="file" src="" alt="" />
+        <input name="filecaption" type="text" placeholder="Enter a caption" />
+        <input type="submit" value="Upload" />
+      </form>
     </div>
   </div>
     
@@ -276,5 +309,17 @@
         tab.classList.add("active");
       });
     });
+
+    function toggleProfilePicModal() {
+        const modal = document.getElementById("profilePicModal");
+        modal.classList.toggle("show");
+
+        if (!modal.classList.contains("show")) {
+          resetProfilePicForm();
+        }
+      }
+      function resetUploadForm() {
+        document.getElementById("imagePreview").classList.remove("show");
+      }
   </script>
 </html>
